@@ -27,6 +27,17 @@
         /* Style for each individual QR code */
         .qr-code {
             text-align: center;
+            position: relative;
+        }
+
+        /* Style for the logo */
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 50px; /* Adjust the size of the logo as needed */
+            max-height: 50px;
         }
     </style>
 </head>
@@ -37,33 +48,43 @@
     <div class="qr-code">
         <div class="qr-code-title">Instagram</div>
         <div id="instagram-qrcode"></div>
+        <img src="instagram-logo.jpg" alt="Instagram Logo" class="logo">
     </div>
 
     <!-- QR Code for Menu -->
     <div class="qr-code">
         <div class="qr-code-title">Menu</div>
         <div id="menu-qrcode"></div>
+        <img src="menu-logo.jpg" alt="Menu Logo" class="logo">
     </div>
 </div>
 
 <script>
-    // Function to generate QR code with custom color
-    function generateQRCode(elementId, text, color) {
+    // Function to generate QR code with custom color and logo
+    function generateQRCode(elementId, text, color, logoSrc) {
         var qrcode = new QRCode(document.getElementById(elementId), {
             text: text,
             width: 128,
             height: 128,
             colorDark: color,
         });
+
+        // Append the logo to the QR code container
+        var container = document.getElementById(elementId).parentNode;
+        var logo = document.createElement("img");
+        logo.src = logoSrc;
+        logo.alt = "Logo";
+        logo.className = "logo";
+        container.appendChild(logo);
     }
 
     // Generate QR Code for Instagram
     var instagramText = "https://www.instagram.com/your_instagram_username/";
-    generateQRCode("instagram-qrcode", instagramText, "#0080FF");
+    generateQRCode("instagram-qrcode", instagramText, "#0080FF", "instagram-logo.jpg");
 
     // Generate QR Code for Menu
     var menuText = "https://www.yourmenuurl.com/";
-    generateQRCode("menu-qrcode", menuText, "#0080FF");
+    generateQRCode("menu-qrcode", menuText, "#0080FF", "menu-logo.jpg");
 
     // Function to enable download option
     function downloadQRCode(elementId, fileName) {
