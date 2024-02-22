@@ -1,145 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Code Generator</title>
-  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@latest/dist/tailwind.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <!-- Include qrcode.js library -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <!-- Include canvas2image library -->
+    <script src="https://rawgit.com/hongru/canvas2image/master/canvas2image.js"></script>
 </head>
-<style>
-  /* Center container */
-  .flex {
-    display: flex;
-  }
-
-  .justify-center {
-    justify-content: center;
-  }
-
-  .items-center {
-    align-items: center;
-  }
-
-  /* Add margin between QR code image and canvas */
-  .mb-4 {
-    margin-bottom: 1rem;
-  }
-</style>
 <body>
-  <div class="bg-gray-100 flex justify-center items-center h-screen">
-    <div class="shadow-md rounded-lg bg-white p-4">
-      <h1 class="text-2xl font-bold mb-2">QR Code Generator</h1>
 
-      <!-- Menu QR Code Section -->
-      <label for="menu-url" class="text-lg font-medium mb-2 block">Menu URL:</label>
-      <input type="text" id="menu-url" name="menu-url" value="https://menu.example.com" class="w-full p-2 border border-gray-400 rounded-md mb-2">
-      <div class="flex justify-center items-center mb-4">
-        <img id="menu-qr-code" src="" alt="Menu QR code">
-        <canvas id="menu-qr-canvas" width="200" height="200" class="ml-4"></canvas>
-      </div>
-      <button id="download-menu-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
-        Download Menu QR code
-      </button>
+<!-- QR Code for Instagram -->
+<div id="instagram-qrcode"></div>
 
-      <!-- Instagram QR Code Section -->
-      <label for="instagram-url" class="text-lg font-medium mb-2 block">Instagram URL:</label>
-      <input type="text" id="instagram-url" name="instagram-url" value="https://instagram.com/example" class="w-full p-2 border border-gray-400 rounded-md mb-2">
-      <div class="flex justify-center items-center mb-4">
-        <img id="instagram-qr-code" src="" alt="Instagram QR code" class="ml-8">
-        <canvas id="instagram-qr-canvas" width="200" height="200" class="ml-4"></canvas>
-      </div>
-      <button id="download-instagram-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4 ml-4">
-        Download Instagram QR code
-      </button>
+<!-- QR Code for Menu -->
+<div id="menu-qrcode"></div>
 
-      <div class="text-center">
-        <p class="text-gray-500 text-sm">Scan the QR codes to visit the websites</p>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Get DOM elements for menu
-    const menuUrlInput = document.getElementById('menu-url');
-    const menuQrCode = document.getElementById('menu-qr-code');
-    const menuQrCanvas = document.getElementById('menu-qr-canvas');
-    const menuDownloadButton = document.getElementById('download-menu-button');
-
-    // Get DOM elements for Instagram
-    const instagramUrlInput = document.getElementById('instagram-url');
-    const instagramQrCode = document.getElementById('instagram-qr-code');
-    const instagramQrCanvas = document.getElementById('instagram-qr-canvas');
-    const instagramDownloadButton = document.getElementById('download-instagram-button');
-
-    // Function to update Menu QR code
-    function updateMenuQRCode() {
-      const url = menuUrlInput.value.trim();
-      const qrCodeUrl = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(url)}&chco=0080FF`;
-
-      // Set the fixed menu logo file name
-      const menuLogoFileName = 'menu-logo.png';
-
-      menuQrCode.src = `${qrCodeUrl}&chld=L|1&chf=bg,s,ffffff|qr,ud_${encodeURIComponent(menuLogoFileName)},1`;
-
-      // Update menu canvas as well
-      const ctx = menuQrCanvas.getContext('2d');
-      const img = new Image();
-      img.src = menuQrCode.src;
-      img.addEventListener('load', function() {
-        ctx.drawImage(img, 0, 0, 200, 200);
-      });
+<script>
+    // Function to generate QR code with custom color
+    function generateQRCode(elementId, text, color) {
+        var qrcode = new QRCode(document.getElementById(elementId), {
+            text: text,
+            width: 128,
+            height: 128,
+            colorDark: color,
+        });
     }
 
-    // Function to update Instagram QR code
-    function updateInstagramQRCode() {
-      const url = instagramUrlInput.value.trim();
-      const qrCodeUrl = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(url)}&chco=0080FF`;
+    // Generate QR Code for Instagram
+    var instagramText = "https://www.instagram.com/your_instagram_username/";
+    generateQRCode("instagram-qrcode", instagramText, "#0080FF");
 
-      // Set the fixed Instagram logo file name
-      const instagramLogoFileName = 'instagram-logo.png';
+    // Generate QR Code for Menu
+    var menuText = "https://www.yourmenuurl.com/";
+    generateQRCode("menu-qrcode", menuText, "#0080FF");
 
-      instagramQrCode.src = `${qrCodeUrl}&chld=L|1&chf=bg,s,ffffff|qr,ud_${encodeURIComponent(instagramLogoFileName)},1`;
-
-      // Update Instagram canvas as well
-      const ctx = instagramQrCanvas.getContext('2d');
-      const img = new Image();
-      img.src = instagramQrCode.src;
-      img.addEventListener('load', function() {
-        ctx.drawImage(img, 0, 0, 200, 200);
-      });
+    // Function to enable download option
+    function downloadQRCode(elementId, fileName) {
+        var canvas = document.getElementById(elementId).getElementsByTagName("canvas")[0];
+        Canvas2Image.saveAsPNG(canvas, null, null, fileName);
     }
 
-    // Listen for changes to the menu URL field
-    menuUrlInput.addEventListener('input', updateMenuQRCode);
-    // Listen for download menu button click
-    menuDownloadButton.addEventListener('click', function() {
-      const url = menuUrlInput.value.trim();
-      const filename = `Menu_QR_${url.replace(/[\W_]+/g, "_")}.png`;
-
-      const downloadLink = document.createElement('a');
-      downloadLink.setAttribute('download', filename);
-      menuQrCanvas.toBlob(function(blob) {
-        const url = URL.createObjectURL(blob);
-        downloadLink.setAttribute('href', url);
-        downloadLink.click();
-      });
+    // Trigger download when clicking on the QR Code
+    document.getElementById("instagram-qrcode").addEventListener("click", function() {
+        downloadQRCode("instagram-qrcode", "instagram_qr_code.png");
     });
 
-    // Listen for changes to the Instagram URL field
-    instagramUrlInput.addEventListener('input', updateInstagramQRCode);
-    // Listen for download Instagram button click
-    instagramDownloadButton.addEventListener('click', function() {
-      const url = instagramUrlInput.value.trim();
-      const filename = `Instagram_QR_${url.replace(/[\W_]+/g, "_")}.png`;
-
-      const downloadLink = document.createElement('a');
-      downloadLink.setAttribute('download', filename);
-      instagramQrCanvas.toBlob(function(blob) {
-        const url = URL.createObjectURL(blob);
-        downloadLink.setAttribute('href', url);
-        downloadLink.click();
-      });
+    document.getElementById("menu-qrcode").addEventListener("click", function() {
+        downloadQRCode("menu-qrcode", "menu_qr_code.png");
     });
-  </script>
+</script>
+
 </body>
 </html>
