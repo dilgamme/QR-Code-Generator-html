@@ -42,7 +42,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-75%, -75%);
+            transform: translate(-50%, -50%);
             max-width: 100px; /* Adjust the size of the logo as needed */
             max-height: 100px;
             background: none; /* Remove background */
@@ -85,8 +85,8 @@
             // Generate QR code for the provided URL
             var qrcode = new QRCode(container, {
                 text: url,
-                width: 320, // Increase width
-                height: 320, // Increase height
+                width: 350, // Increase width
+                height: 350, // Increase height
                 colorDark: "#0080FF",
                 correctLevel: QRCode.CorrectLevel.H // Use 'H' for High error correction
             });
