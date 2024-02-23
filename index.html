@@ -8,6 +8,8 @@
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <!-- Include canvas2image library -->
     <script src="https://rawgit.com/hongru/canvas2image/master/canvas2image.js"></script>
+    <!-- Include html2canvas library -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         /* Style for the QR code titles */
         .qr-code-title {
@@ -56,16 +58,18 @@
     <div class="qr-code-container" id="menu-qrcode-container">
         <img src="menu-logo.jpg" alt="Menu Logo" class="logo">
     </div>
-    <button onclick="generateQRCode('menu-url', 'menu-qrcode-container', 'menu-logo.jpg')"     >Generate Menu QR Code</button>
+    <button onclick="generateQRCode('menu-url', 'menu-qrcode-container', 'menu-logo.jpg')">Generate Menu QR Code</button>
+    <button onclick="downloadQRCode('menu-qrcode-container', 'menu_qr_code')">Download Menu QR Code</button>
 </div>
 
 <div class="qr-code-section">
     <div class="qr-code-title">Generate Instagram QR Code</div>
     <input type="text" id="instagram-url" class="url-input" placeholder="Paste Instagram URL">
     <div class="qr-code-container" id="instagram-qrcode-container">
-        <img src="instagram-logo1.png" alt="Instagram Logo" class="logo">
+        <img src="instagram-logo.png" alt="Instagram Logo" class="logo">
     </div>
-    <button onclick="generateQRCode('instagram-url', 'instagram-qrcode-container', 'instagram-logo1.png')"    >Generate Instagram QR Code</button>
+    <button onclick="generateQRCode('instagram-url', 'instagram-qrcode-container', 'instagram-logo.png')">Generate Instagram QR Code</button>
+    <button onclick="downloadQRCode('instagram-qrcode-container', 'instagram_qr_code')">Download Instagram QR Code</button>
 </div>
 
 <script>
@@ -97,9 +101,18 @@
     }
 
     // Function to enable download option
-    function downloadQRCode(elementId, fileName) {
-        var canvas = document.getElementById(elementId).getElementsByTagName("canvas")[0];
-        Canvas2Image.saveAsPNG(canvas, null, null, fileName);
+    function downloadQRCode(containerId, fileName) {
+        var container = document.getElementById(containerId);
+
+        html2canvas(container).then(function (canvas) {
+            // Create an "a" element to trigger the download
+            var link = document.createElement("a");
+            document.body.appendChild(link);
+            link.download = fileName + ".png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+            document.body.removeChild(link);
+        });
     }
 </script>
 
