@@ -85,8 +85,8 @@
             // Generate QR code for the provided URL
             var qrcode = new QRCode(container, {
                 text: url,
-                width: 350, // Increase width
-                height: 350, // Increase height
+                width: 375, // Increase width
+                height: 375, // Increase height
                 colorDark: "#0080FF",
                 correctLevel: QRCode.CorrectLevel.H // Use 'H' for High error correction
             });
@@ -105,7 +105,7 @@
         var container = document.getElementById(containerId);
 
         // Set the DPI (dots per inch) for higher quality
-        var dpi = 300; // Adjust as needed
+        var dpi = 400; // Adjust as needed
 
         html2canvas(container, { dpi: dpi }).then(function (canvas) {
             // Create an "a" element to trigger the download
