@@ -39,16 +39,27 @@
             max-width: 50px; /* Adjust the size of the logo as needed */
             max-height: 50px;
         }
+
+        /* Style for the input field */
+        .url-input {
+            margin-top: 20px;
+            width: 80%;
+            padding: 5px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
+
+<input type="text" id="instagram-url" class="url-input" placeholder="Enter Instagram URL">
+<input type="text" id="menu-url" class="url-input" placeholder="Enter Menu URL">
 
 <div class="qr-code-container">
     <!-- QR Code for Instagram -->
     <div class="qr-code">
         <div class="qr-code-title">Instagram</div>
         <div id="instagram-qrcode"></div>
-        <img src="instagram-logo1.png" alt="Instagram Logo" class="logo">
+        <img src="instagram-logo.png" alt="Instagram Logo" class="logo">
     </div>
 
     <!-- QR Code for Menu -->
@@ -78,13 +89,20 @@
         container.appendChild(logo);
     }
 
-    // Generate QR Code for Instagram
-    var instagramText = "https://www.instagram.com/your_instagram_username/";
-    generateQRCode("instagram-qrcode", instagramText, "#0080FF", "instagram-logo.png");
+    // Function to update QR code based on user input
+    function updateQRCode(inputId, qrCodeId, logoSrc) {
+        var input = document.getElementById(inputId);
+        var qrCode = document.getElementById(qrCodeId);
+        var url = input.value.trim();
 
-    // Generate QR Code for Menu
-    var menuText = "https://www.yourmenuurl.com/";
-    generateQRCode("menu-qrcode", menuText, "#0080FF", "menu-logo.jpg");
+        if (url !== "") {
+            // Generate QR code for the provided URL
+            generateQRCode(qrCodeId, url, "#0080FF", logoSrc);
+        } else {
+            // Clear the QR code if the URL is empty
+            qrCode.innerHTML = "";
+        }
+    }
 
     // Function to enable download option
     function downloadQRCode(elementId, fileName) {
@@ -99,6 +117,15 @@
 
     document.getElementById("menu-qrcode").addEventListener("click", function() {
         downloadQRCode("menu-qrcode", "menu_qr_code.png");
+    });
+
+    // Update QR codes when input values change
+    document.getElementById("instagram-url").addEventListener("input", function() {
+        updateQRCode("instagram-url", "instagram-qrcode", "instagram-logo.png");
+    });
+
+    document.getElementById("menu-url").addEventListener("input", function() {
+        updateQRCode("menu-url", "menu-qrcode", "menu-logo.jpg");
     });
 </script>
 
