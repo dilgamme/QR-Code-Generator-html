@@ -53,53 +53,46 @@
 <div class="qr-code-section">
     <div class="qr-code-title">Generate Menu QR Code</div>
     <input type="text" id="menu-url" class="url-input" placeholder="Paste Menu URL">
-    <div class="qr-code-container">
-        <div id="menu-qrcode"></div>
+    <div class="qr-code-container" id="menu-qrcode-container">
         <img src="menu-logo.jpg" alt="Menu Logo" class="logo">
     </div>
-    <button onclick="generateQRCode('menu-url', 'menu-qrcode', 'menu-logo.jpg')">Generate Menu QR Code</button>
+    <button onclick="generateQRCode('menu-url', 'menu-qrcode-container', 'menu-logo.jpg')">Generate Menu QR Code</button>
 </div>
 
 <div class="qr-code-section">
     <div class="qr-code-title">Generate Instagram QR Code</div>
     <input type="text" id="instagram-url" class="url-input" placeholder="Paste Instagram URL">
-    <div class="qr-code-container">
-        <div id="instagram-qrcode"></div>
+    <div class="qr-code-container" id="instagram-qrcode-container">
         <img src="instagram-logo.png" alt="Instagram Logo" class="logo">
     </div>
-    <button onclick="generateQRCode('instagram-url', 'instagram-qrcode', 'instagram-logo.png')">Generate Instagram QR Code</button>
+    <button onclick="generateQRCode('instagram-url', 'instagram-qrcode-container', 'instagram-logo.png')">Generate Instagram QR Code</button>
 </div>
 
 <script>
     // Function to generate QR code with custom color and logo
-    function generateQRCode(inputId, qrCodeId, logoSrc) {
+    function generateQRCode(inputId, containerId, logoSrc) {
         var input = document.getElementById(inputId);
-        var qrCode = document.getElementById(qrCodeId);
+        var container = document.getElementById(containerId);
         var url = input.value.trim();
+
+        // Clear the container
+        container.innerHTML = "";
 
         if (url !== "") {
             // Generate QR code for the provided URL
-            var qrcode = new QRCode(qrCode, {
+            var qrcode = new QRCode(container, {
                 text: url,
                 width: 128,
                 height: 128,
                 colorDark: "#0080FF",
             });
 
-            // Remove the alt attribute added by the QRCode library
-            var generatedImage = qrCode.getElementsByTagName("img")[0];
-            generatedImage.removeAttribute("alt");
-
             // Append the logo to the QR code container
-            var container = qrCode.parentNode;
             var logo = document.createElement("img");
             logo.src = logoSrc;
             logo.alt = "Logo";
             logo.className = "logo";
             container.appendChild(logo);
-        } else {
-            // Clear the QR code if the URL is empty
-            qrCode.innerHTML = "";
         }
     }
 
