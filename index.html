@@ -85,9 +85,10 @@
             // Generate QR code for the provided URL
             var qrcode = new QRCode(container, {
                 text: url,
-                width: 128,
-                height: 128,
+                width: 256, // Increase width
+                height: 256, // Increase height
                 colorDark: "#0080FF",
+                correctLevel: QRCode.CorrectLevel.H // Use 'H' for High error correction
             });
 
             // Append the logo to the QR code container
