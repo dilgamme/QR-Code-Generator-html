@@ -65,7 +65,7 @@
     <input type="text" id="instagram-url" class="url-input" placeholder="Paste Instagram URL">
     <div class="qr-code-container">
         <div id="instagram-qrcode"></div>
-        <img src="instagram-logo1.png" alt="Instagram Logo" class="logo">
+        <img src="instagram-logo.png" alt="Instagram Logo" class="logo">
     </div>
     <button onclick="generateQRCode('instagram-url', 'instagram-qrcode', 'instagram-logo.png')">Generate Instagram QR Code</button>
 </div>
@@ -85,6 +85,10 @@
                 height: 128,
                 colorDark: "#0080FF",
             });
+
+            // Remove the alt attribute added by the QRCode library
+            var generatedImage = qrCode.getElementsByTagName("img")[0];
+            generatedImage.removeAttribute("alt");
 
             // Append the logo to the QR code container
             var container = qrCode.parentNode;
