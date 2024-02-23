@@ -103,7 +103,10 @@
     function downloadQRCode(containerId, fileName) {
         var container = document.getElementById(containerId);
 
-        html2canvas(container).then(function (canvas) {
+        // Set the DPI (dots per inch) for higher quality
+        var dpi = 300; // Adjust as needed
+
+        html2canvas(container, { dpi: dpi }).then(function (canvas) {
             // Create an "a" element to trigger the download
             var link = document.createElement("a");
             document.body.appendChild(link);
