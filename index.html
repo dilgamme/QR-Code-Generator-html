@@ -9,6 +9,13 @@
     <!-- Include canvas2image library -->
     <script src="https://rawgit.com/hongru/canvas2image/master/canvas2image.js"></script>
     <style>
+        /* Add some spacing between the QR codes */
+        .qr-code-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
         /* Style for the QR code titles */
         .qr-code-title {
             text-align: center;
@@ -17,24 +24,10 @@
             font-weight: bold;
         }
 
-        /* Style for each individual QR code section */
-        .qr-code-section {
+        /* Style for each individual QR code */
+        .qr-code {
             text-align: center;
-            margin-top: 20px;
-        }
-
-        /* Style for the input field */
-        .url-input {
-            width: 80%;
-            padding: 5px;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        /* Style for the QR code container */
-        .qr-code-container {
             position: relative;
-            display: inline-block;
         }
 
         /* Style for the logo */
@@ -46,56 +39,80 @@
             max-width: 50px; /* Adjust the size of the logo as needed */
             max-height: 50px;
         }
+
+        /* Style for the input field */
+        .url-input {
+            margin-top: 20px;
+            width: 80%;
+            padding: 5px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 
-<div class="qr-code-section">
-    <div class="qr-code-title">Generate Menu QR Code</div>
-    <input type="text" id="menu-url" class="url-input" placeholder="Paste Menu URL">
-    <div class="qr-code-container">
-        <div id="menu-qrcode"></div>
-        <img src="menu-logo.jpg" alt="Menu Logo" class="logo">
+<!-- Menu QR Code Section -->
+<div>
+    <h2>Generate Menu QR Code</h2>
+    <input type="text" id="menu-url" class="url-input" placeholder="Enter Menu URL">
+    <button onclick="generateMenuQRCode()">Generate Menu QR Code</button>
+    <div id="menu-qrcode-container" class="qr-code-container">
+        <!-- QR Code for Menu -->
+        <div class="qr-code">
+            <div class="qr-code-title">Menu</div>
+            <div id="menu-qrcode"></div>
+            <img src="menu-logo.jpg" alt="Menu Logo" class="logo">
+        </div>
     </div>
-    <button onclick="generateQRCode('menu-url', 'menu-qrcode', 'menu-logo.jpg')">Generate Menu QR Code</button>
 </div>
 
-<div class="qr-code-section">
-    <div class="qr-code-title">Generate Instagram QR Code</div>
-    <input type="text" id="instagram-url" class="url-input" placeholder="Paste Instagram URL">
-    <div class="qr-code-container">
-        <div id="instagram-qrcode"></div>
-        <img src="instagram-logo.png" alt="Instagram Logo" class="logo">
+<!-- Instagram QR Code Section -->
+<div>
+    <h2>Generate Instagram QR Code</h2>
+    <input type="text" id="instagram-url" class="url-input" placeholder="Enter Instagram URL">
+    <button onclick="generateInstagramQRCode()">Generate Instagram QR Code</button>
+    <div id="instagram-qrcode-container" class="qr-code-container">
+        <!-- QR Code for Instagram -->
+        <div class="qr-code">
+            <div class="qr-code-title">Instagram</div>
+            <div id="instagram-qrcode"></div>
+            <img src="instagram-logo.png" alt="Instagram Logo" class="logo">
+        </div>
     </div>
-    <button onclick="generateQRCode('instagram-url', 'instagram-qrcode', 'instagram-logo.png')">Generate Instagram QR Code</button>
 </div>
 
 <script>
     // Function to generate QR code with custom color and logo
-    function generateQRCode(inputId, qrCodeId, logoSrc) {
-        var input = document.getElementById(inputId);
-        var qrCode = document.getElementById(qrCodeId);
-        var url = input.value.trim();
+    function generateQRCode(elementId, text, color, logoSrc) {
+        var qrcode = new QRCode(document.getElementById(elementId), {
+            text: text,
+            width: 128,
+            height: 128,
+            colorDark: color,
+        });
 
-        if (url !== "") {
-            // Generate QR code for the provided URL
-            var qrcode = new QRCode(qrCode, {
-                text: url,
-                width: 128,
-                height: 128,
-                colorDark: "#0080FF",
-            });
+        // Append the logo to the QR code container
+        var container = document.getElementById(elementId).parentNode;
+        var logo = document.createElement("img");
+        logo.src = logoSrc;
+        logo.alt = "Logo";
+        logo.className = "logo";
+        container.appendChild(logo);
+    }
 
-            // Append the logo to the QR code container
-            var container = qrCode.parentNode;
-            var logo = document.createElement("img");
-            logo.src = logoSrc;
-            logo.alt = "Logo";
-            logo.className = "logo";
-            container.appendChild(logo);
-        } else {
-            // Clear the QR code if the URL is empty
-            qrCode.innerHTML = "";
+    // Function to generate Menu QR Code
+    function generateMenuQRCode() {
+        var menuUrl = document.getElementById("menu-url").value.trim();
+        if (menuUrl !== "") {
+            generateQRCode("menu-qrcode", menuUrl, "#0080FF", "menu-logo.jpg");
+        }
+    }
+
+    // Function to generate Instagram QR Code
+    function generateInstagramQRCode() {
+        var instagramUrl = document.getElementById("instagram-url").value.trim();
+        if (instagramUrl !== "") {
+            generateQRCode("instagram-qrcode", instagramUrl, "#0080FF", "instagram-logo.png");
         }
     }
 
@@ -104,6 +121,15 @@
         var canvas = document.getElementById(elementId).getElementsByTagName("canvas")[0];
         Canvas2Image.saveAsPNG(canvas, null, null, fileName);
     }
+
+    // Trigger download when clicking on the QR Code
+    document.getElementById("instagram-qrcode").addEventListener("click", function() {
+        downloadQRCode("instagram-qrcode", "instagram_qr_code.png");
+    });
+
+    document.getElementById("menu-qrcode").addEventListener("click", function() {
+        downloadQRCode("menu-qrcode", "menu_qr_code.png");
+    });
 </script>
 
 </body>
